@@ -62,6 +62,52 @@ Sheets("Onsite").Activate
     
 End Sub
 
+Sub isOnsite()
+'
+'
+'Created by Michael Klink
+'
+'
+
+x = Sheets("REF").Range("I2")
+
+Dim AAonsite As Boolean
+Dim loginRange As Range
+Dim EMPrownum As Integer
+
+AAonsite = False
+
+With Sheets("FLEX").Range("A:AG")
+    Set loginRange = .Find(x, LookIn:=xlValues)
+    If loginRange Is Nothing Then
+        MsgBox "Sorry, but it looks like " & x & " is not on the job list." & vbCrLf _
+        & "Please try again."
+    
+    Else
+        EMPrownum = loginRange.Row
+        If Range("AG" & EMPrownum) > 0 Then
+            AAonsite = True
+        Else
+            MsgBox "Sorry, it looks like " & x & " is not onsite today." & vbCrLf _
+            & "Please try another login", , "Failed"
+        End If
+        
+        If AAonsite Then
+            MsgBox x & " is onsite and trained in:" & vbCrLf _
+            & Range("AA" & EMPrownum).Value & vbCrLf _
+            & Range("AB" & EMPrownum).Value & vbCrLf _
+            & Range("AC" & EMPrownum).Value & vbCrLf _
+            & Range("AD" & EMPrownum).Value & vbCrLf _
+            & Range("AE" & EMPrownum).Value & vbCrLf _
+            & Range("AF" & EMPrownum).Value, , "Success!"
+        End If
+    End If
+End With
+
+
+
+End Sub
+
 Sub createlist()
 
 '
@@ -202,3 +248,5 @@ Set rng = Application.Selection
     End With
 
 End Sub
+
+
