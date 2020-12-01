@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!--Created By Michael Klink-->
+  <title>Uh oh!</title>
+  <style>
+  body {
+    background-color: #112131;
+    color: #ccc;
+    text-align: center;
+    font-family: Amazon Ember, arial, sans-serif;
+  }
+
+  div.dialog {
+    width: 25em;
+    background-color: #191813;
+    margin: 4em auto 0 auto;
+    border: 1px solid #495863;
+    border-top: #600 solid 4px;
+    border-top-left-radius: 9px;
+    border-top-right-radius: 9px;
+    padding: 7px 4em 0 4em;
+  }
+
+  h1 {
+    font-size: 100%;
+    color: #fff;
+    line-height: 1.5em;
+  }
+
+  body > p {
+    width: 33em;
+    margin: 0 auto 1em;
+    padding: 1em 0;
+    background-color: #eee;
+    border: 1px solid #495863;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    color: #ddd;
+    box-shadow:0 3px 8px rgba(50, 50, 50, 0.17);
+  }
+
+    body > p::selection,
+    body > p::-moz-selection {
+      color: #839496;
+      background-color: #002b36;
+    }
+
+    body > p::selection:window-inactive,
+    body > p::-moz-selection:-moz-window-inactive {
+      color: #eee8d5;
+      background: #073642;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="dialog">
+    <h1>We're sorry, but something went wrong.</h1>
+  </div>
+  <p>Something happened on our end and you're suffering the consequences. Please send an error report describing how you got here so that we can try to resolve this from happening in the future.</p>
+</body>
+</html>
