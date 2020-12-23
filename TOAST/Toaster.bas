@@ -1,4 +1,39 @@
 Attribute VB_Name = "Toaster"
+Sub badgesearch()
+
+'Created by Michael Klink
+'
+
+Application.DisplayAlerts = False
+
+Sheets("Search_By_Badge_Number_Bulk").Range("D4:D1048576").Clear
+
+Sheets("REF").Visible = True
+Sheets("FCLM").Visible = True
+Sheets("FLEX").Visible = True
+Sheets("Onsite").Visible = True
+Sheets("Filtered").Visible = True
+Sheets("Backup").Visible = True
+Sheets("Roster").Visible = True
+
+Call Pull_Data
+Call jobSplit
+
+Sheets("Search_By_Badge_Number_Bulk").Select
+Range("D4").Select
+
+Sheets("REF").Visible = False
+Sheets("FCLM").Visible = False
+Sheets("FLEX").Visible = False
+Sheets("Onsite").Visible = False
+Sheets("Filtered").Visible = False
+Sheets("Backup").Visible = False
+Sheets("Roster").Visible = False
+
+Application.DisplayAlerts = True
+
+End Sub
+
 
 Sub jobSplit()
 '
@@ -9,7 +44,7 @@ Sub jobSplit()
 Application.DisplayAlerts = False
 
     Sheets("FLEX").Activate
-    Columns("AA:AF").Select
+    Columns("AA:AM").Select
     Selection.ClearContents
     Columns("Q:Q").Select
     Selection.TextToColumns Destination:=Range("AA1"), DataType:=xlDelimited, _
@@ -18,7 +53,7 @@ Application.DisplayAlerts = False
         :="|", FieldInfo:=Array(Array(1, 1), Array(2, 1), Array(3, 1)), _
         TrailingMinusNumbers:=True
         
-Application.DisplayAlerts = True
+
 
 End Sub
 
@@ -248,5 +283,196 @@ Set rng = Application.Selection
     End With
 
 End Sub
+
+
+Sub NotTrainedOnsite()
+
+'
+'Created by Michael Klink
+
+'
+Application.ScreenUpdating = False
+Application.DisplayAlerts = False
+
+Sheets("REF").Visible = True
+Sheets("FCLM").Visible = True
+Sheets("FLEX").Visible = True
+Sheets("Onsite").Visible = True
+Sheets("Filtered").Visible = True
+Sheets("Backup").Visible = True
+Sheets("Roster").Visible = True
+Sheets("Trained").Visible = True
+
+Sheets("Search_By_Module").Activate
+Range("F7:F8").Select
+Range(Selection, Selection.End(xlDown)).Select
+Selection.Clear
+
+
+Call Pull_Data_Mod
+
+Dim rownum As Integer
+Dim EIDtemp As String
+Dim logintemp As String
+Dim rowcounter As Integer
+Dim rng1 As Object
+Dim x As Integer
+
+Sheets("Backup").Select
+Range("A:Z").Select
+Selection.Clear
+
+Sheets("Roster").Select
+x = 1  ' counter
+lrow = Cells(Sheets("Roster").Rows.Count, 1).End(xlUp).Row  'last row variable
+
+'dynamically select cell range
+With Sheets("Roster")
+    Range("AA1").Select
+    'Range(Selection, Selection.End(xlToRight)).Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Set rng1 = Selection
+End With
+
+'loop through cells in selected range checking if they match job field
+'when it reaches the last row, send successful message and exit loop
+    For Each cell In rng1
+        If (cell.Row) = lrow Then
+            MsgBox "Compilation Complete", , "SUCCESS!"
+            Exit For
+        End If
+        If cell = Sheets("REF").Range("$K$1") And Sheets("Roster").Range("AB" & (cell.Row)) = Sheets("REF").Range("$K$2") Then
+            EIDtemp = Sheets("Roster").Range("A" & (cell.Row))
+            logintemp = Sheets("Roster").Range("B" & (cell.Row))
+            Sheets("Backup").Range("B" & x) = EIDtemp
+            Sheets("Backup").Range("A" & x) = logintemp
+            x = x + 1
+        End If
+    Next cell
+    
+    'copy cells from backup sheet to paste on Search_By_Job page
+    Sheets("Backup").Select
+    Range("A1").Select
+    Range(Selection, Selection.End(xlToRight)).Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Application.CutCopyMode = False
+    Selection.Copy
+
+    Sheets("Search_By_Module").Select
+    Range("F7").Select
+    ActiveSheet.Paste
+    
+    Sheets("Search_By_Module").Select
+    ActiveSheet.Range("A1").Select
+
+Sheets("REF").Visible = False
+Sheets("FCLM").Visible = False
+Sheets("FLEX").Visible = False
+Sheets("Onsite").Visible = False
+Sheets("Filtered").Visible = False
+Sheets("Backup").Visible = False
+Sheets("Roster").Visible = False
+Sheets("Trained").Visible = False
+
+
+Application.ScreenUpdating = True
+Application.DisplayAlerts = True
+
+End Sub
+
+Sub TrainedOnsite()
+
+'
+'Created by Michael Klink
+
+'
+Application.ScreenUpdating = False
+Application.DisplayAlerts = False
+
+Sheets("Search_By_Module").Activate
+Range("F7:F8").Select
+Range(Selection, Selection.End(xlDown)).Select
+Selection.Clear
+
+Sheets("REF").Visible = True
+Sheets("FCLM").Visible = True
+Sheets("FLEX").Visible = True
+Sheets("Onsite").Visible = True
+Sheets("Filtered").Visible = True
+Sheets("Backup").Visible = True
+Sheets("Roster").Visible = True
+Sheets("Trained").Visible = True
+
+Call Pull_Data_Mod
+
+Dim rownum As Integer
+Dim EIDtemp As String
+Dim logintemp As String
+Dim rowcounter As Integer
+Dim rng1 As Object
+Dim x As Integer
+
+Sheets("Backup").Select
+Range("A:Z").Select
+Selection.Clear
+
+Sheets("Roster").Select
+x = 1  ' counter
+lrow = Cells(Sheets("Roster").Rows.Count, 1).End(xlUp).Row  'last row variable
+
+'dynamically select cell range
+With Sheets("Roster")
+    Range("AA1").Select
+    'Range(Selection, Selection.End(xlToRight)).Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Set rng1 = Selection
+End With
+
+'loop through cells in selected range checking if they match job field
+'when it reaches the last row, send successful message and exit loop
+    For Each cell In rng1
+        If (cell.Row) = lrow Then
+            MsgBox "Compilation Complete", , "SUCCESS!"
+            Exit For
+        End If
+        If cell = Sheets("REF").Range("$K$1") And Sheets("Roster").Range("AB" & (cell.Row)) = Sheets("REF").Range("$K$1") Then
+            EIDtemp = Sheets("Roster").Range("A" & (cell.Row))
+            logintemp = Sheets("Roster").Range("B" & (cell.Row))
+            Sheets("Backup").Range("B" & x) = EIDtemp
+            Sheets("Backup").Range("A" & x) = logintemp
+            x = x + 1
+        End If
+    Next cell
+    
+    'copy cells from backup sheet to paste on Search_By_Job page
+    Sheets("Backup").Select
+    Range("A1").Select
+    Range(Selection, Selection.End(xlToRight)).Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Application.CutCopyMode = False
+    Selection.Copy
+
+    Sheets("Search_By_Module").Select
+    Range("F7").Select
+    ActiveSheet.Paste
+    
+Sheets("Search_By_Module").Select
+ActiveSheet.Range("A1").Select
+
+Sheets("REF").Visible = False
+Sheets("FCLM").Visible = False
+Sheets("FLEX").Visible = False
+Sheets("Onsite").Visible = False
+Sheets("Filtered").Visible = False
+Sheets("Backup").Visible = False
+Sheets("Roster").Visible = False
+Sheets("Trained").Visible = False
+
+
+Application.ScreenUpdating = True
+Application.DisplayAlerts = True
+
+End Sub
+
 
 
