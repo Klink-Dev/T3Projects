@@ -1,0 +1,51 @@
+<html>
+<head>
+<meta charset='utf-8'>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+
+<style>
+  .banana-rain {
+    background-image: url("https://internal-cdn.amazon.com/phonetool.amazon.com/assets/banana_16-6fa31042eea8b94b7fb48ea843e1e54ddddff152fe33e7acde8fbfe31ea6cec6.png");
+    width: 16px;
+    height: 16px;
+    top:0px;
+    left:0px;
+    position:absolute;
+    z-index:200;
+  }
+</style>
+<script>
+  function bananaRain(){
+    var randomTime = Math.floor(Math.random() * (500) * 2);
+    setTimeout(function(){
+      spawnBanana();
+      bananaRain();
+    },randomTime);
+  }
+
+  function spawnBanana() {
+    var banana = $('<div class="banana-rain"></div>');
+    $('body').prepend(banana);
+    posX = Math.floor(Math.random() * $('body').width());
+    speed = Math.floor(Math.random() * (500) * 20);
+    banana.css({'left':posX+'px'});
+    banana.animate({
+      top: "700px",
+      opacity : "0",
+    }, 4000, function(){
+      $(this).remove();
+    });
+  }
+
+  $(document).ready( function() {
+    bananaRain();
+
+  });
+</script>
+
+
+</body>
+</html>
